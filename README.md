@@ -1,1 +1,2 @@
-# little-game
+# Nice little game
+
