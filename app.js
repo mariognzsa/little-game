@@ -1,11 +1,14 @@
+import { Enemy } from './class/Enemy.class.js';
 import { Player } from './class/Player.class.js';
 import { Projectile } from './class/Projectile.class.js';
 
 const canvas = document.querySelector('canvas');
 const context = canvas.getContext('2d');
 const _PROJECTILE_RADIUS = 5;
+const _ENEMY_RADIUS = 30;
 const VEL_MULTIPLIER = 4;
 const _projectiles = [];
+const _enemies = [];
 
 var _PLAYER_IMG_LEFT = new Image();
 _PLAYER_IMG_LEFT.src = './src/img/lucy_left.png';
@@ -28,6 +31,34 @@ function animate() {
             _projectiles.splice(_projectiles.indexOf(projectile), 1);
         }
     });
+    _enemies.forEach((enemy) => {
+        enemy.calculateXYVel(_player.x, _player.y);
+        enemy.update();
+        _projectiles.forEach((projectile) => {
+            if(enemy.checkBoundries(projectile)){
+                _enemies.splice(_enemies.indexOf(enemy), 1);
+                _projectiles.splice(_projectiles.indexOf(projectile), 1);
+                return;
+            }
+        });
+    });
+}
+
+function spawnEnemies() {
+    setInterval (() => {
+        _enemies.push(
+            new Enemy(
+                innerWidth, 
+                innerHeight,
+                _ENEMY_RADIUS,
+                'red',
+                _player.x,
+                _player.y,
+                VEL_MULTIPLIER,
+                context
+                )
+        );
+    }, 3000);
 }
 
 addEventListener('click', (event) => {
@@ -50,3 +81,4 @@ addEventListener('keypress', (event) => {
 })
 
 animate();
+spawnEnemies();

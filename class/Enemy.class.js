@@ -1,3 +1,5 @@
+import { Projectile } from "./Projectile.class.js";
+
 export class Enemy {
 
     constructor(x, y, radius, color, targetX, targetY, multiplier, context) {
@@ -7,7 +9,7 @@ export class Enemy {
         this.color = color;
         this.x_vel = 0;
         this.y_vel = 0;
-        this.multiplier = multiplier
+        this.multiplier = multiplier;
         this.calculateXYVel(targetX, targetY);
         this.context = context;
     }
@@ -25,9 +27,17 @@ export class Enemy {
         this.draw();
     }
 
-    calculateXYVel(targetX, targetY){
+    calculateXYVel(targetX, targetY) {
         const angle = Math.atan2(targetY - this.y, targetX - this.x);
         this.x_vel = Math.cos(angle) * this.multiplier;
         this.y_vel = Math.sin(angle) * this.multiplier;
+    }
+
+    checkBoundries(projectile) {
+        if(projectile.x > this.x && projectile.x < this.x + this.radius*2 && 
+            projectile.y > this.y && projectile.y < this.y + this.radius*2)
+            return true;
+        else
+            return false;
     }
 }
